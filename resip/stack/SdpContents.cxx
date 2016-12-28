@@ -1001,63 +1001,66 @@ SdpContents::Session::parse(ParseBuffer& pb)
    pb.data(mName, anchor);
    skipEol(pb);
 
-   if (!pb.eof() && *pb.position() == 'i')
+   while (!pb.eof() && *pb.position() != 'm')
    {
-      pb.skipChar('i');
-      const char* anchor = pb.skipChar(Symbols::EQUALS[0]);
-      pb.skipToOneOf(Symbols::CRLF);
-      pb.data(mInformation, anchor);
-      skipEol(pb);
-   }
+      if (!pb.eof() && *pb.position() == 'i')
+      {
+         pb.skipChar('i');
+         const char* anchor = pb.skipChar(Symbols::EQUALS[0]);
+         pb.skipToOneOf(Symbols::CRLF);
+         pb.data(mInformation, anchor);
+         skipEol(pb);
+      }
 
-   if (!pb.eof() && *pb.position() == 'u')
-   {
-      pb.skipChar('u');
-      pb.skipChar(Symbols::EQUALS[0]);
-      mUri.parse(pb);
-      skipEol(pb);
-   }
+      if (!pb.eof() && *pb.position() == 'u')
+      {
+         pb.skipChar('u');
+         pb.skipChar(Symbols::EQUALS[0]);
+         mUri.parse(pb);
+         skipEol(pb);
+      }
 
-   while (!pb.eof() && *pb.position() == 'e')
-   {
-      addEmail(Email());
-      mEmails.back().parse(pb);
-   }
+      while (!pb.eof() && *pb.position() == 'e')
+      {
+         addEmail(Email());
+         mEmails.back().parse(pb);
+      }
 
-   while (!pb.eof() && *pb.position() == 'p')
-   {
-      addPhone(Phone());
-      mPhones.back().parse(pb);
-   }
+      while (!pb.eof() && *pb.position() == 'p')
+      {
+         addPhone(Phone());
+         mPhones.back().parse(pb);
+      }
 
-   if (!pb.eof() && *pb.position() == 'c')
-   {
-      mConnection.parse(pb);
-   }
+      if (!pb.eof() && *pb.position() == 'c')
+      {
+         mConnection.parse(pb);
+      }
 
-   while (!pb.eof() && *pb.position() == 'b')
-   {
-      addBandwidth(Bandwidth());
-      mBandwidths.back().parse(pb);
-   }
+      while (!pb.eof() && *pb.position() == 'b')
+      {
+         addBandwidth(Bandwidth());
+         mBandwidths.back().parse(pb);
+      }
 
-   while (!pb.eof() && *pb.position() == 't')
-   {
-      addTime(Time());
-      mTimes.back().parse(pb);
-   }
+      while (!pb.eof() && *pb.position() == 't')
+      {
+         addTime(Time());
+         mTimes.back().parse(pb);
+      }
 
-   if (!pb.eof() && *pb.position() == 'z')
-   {
-      mTimezones.parse(pb);
-   }
+      if (!pb.eof() && *pb.position() == 'z')
+      {
+         mTimezones.parse(pb);
+      }
 
-   if (!pb.eof() && *pb.position() == 'k')
-   {
-      mEncryption.parse(pb);
-   }
+      if (!pb.eof() && *pb.position() == 'k')
+      {
+         mEncryption.parse(pb);
+      }
 
-   mAttributeHelper.parse(pb);
+      mAttributeHelper.parse(pb);
+   }
 
    while (!pb.eof() && *pb.position() == 'm')
    {
